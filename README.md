@@ -1,7 +1,7 @@
 expiry-notifier
 ===============
 
-This is a super lightweight shared nothing service for performing expiry callbacks against a Couchbase bucket where TTL (time to live) are set.   The service provides a list of meta id's and expiry times for keys that will expire within a specified interval.   It runs a simple instance of node.js and is configured exclusively through the REST API.  It can be called dynamically as needed from an application, or configured to loop indefinitely and send the list of keys at a specified interval.   
+A super lightweight shared nothing service for performing expiry callbacks against a Couchbase bucket where TTL (time to live) are set.   The service provides a list of meta id's and expiry times for keys that will expire within a specified interval.   It runs a simple instance of node.js and is configured exclusively through the REST API.  It can be called dynamically as needed from an application, or configured to loop indefinitely and send the list of keys at a specified interval.   
 
 ## Installation
  - [1] Install Node.js
