@@ -16,8 +16,8 @@ A super lightweight shared nothing service for performing expiry callbacks again
 #### /setup/server/:server/:port/:bucket	[**_RETURNS: {JSON OBJECT} with status change_**]
 --Sets the reference to the Couchbase server and bucket.   
 
-#### /setup/endpoint/:hostname/:port/:path  [**_RETURNS: {JSON OBJECT} with status change_**]
---Sets the endpoint url to send the list of expiring keys to as http://hostname:port/path.  Note: omit any *LEADING* "/" characters in the :path.   
+#### /setup/endpoint/:hostname/:port/:path/<:https>  [**_RETURNS: {JSON OBJECT} with status change_**]
+--Sets the endpoint url to send the list of expiring keys to as http://hostname:port/path.  If "https" is passed, notifications will be sent over https.  Note: omit any *LEADING* "/" characters in the :path.  For example to send notifications to https://foo.com/bar call _/setup/endpoint/foo.com/443/bar/https_
   
 #### /setup/poll/:interval/:loop [**_RETURNS: {JSON OBJECT} with status change_**]
 --Sets the time window (:interval) in seconds to check for expiring keys.  If :loop is set to "loop", the service will check run indefinitely, checking for expiring keys at the specified :interval. Looping requires endpoint above be defined.  
