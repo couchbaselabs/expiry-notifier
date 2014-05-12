@@ -3,7 +3,6 @@
 //----------------------------
 var http = require('http');
 var couchbase = require('couchbase');
-var util = require('util');
 var db;
 var configured = false;
 var endpoint;
@@ -14,6 +13,7 @@ var loop = false;
 var loopInterval;
 var relative = false;
 var loopTimer;
+var https = false;
 
 //----------------------------
 // Create TTL Index
@@ -140,7 +140,7 @@ exports.poll = function (req, res) {
 									callbacks[(results[k].id)] = results[k].value;
 								}
 							} else {
-								db.get(results[k].id, function (err, result) {
+								db.get(results[k].id,function (err, result) {
 									if (err) {
 										console.log("POLL=====>LAZY EXPIRE KEY: " + results[k].id +
 											" EXPIRED:" + err);
@@ -232,6 +232,12 @@ exports.endpoint = function (req, res) {
 		});
 	} else {
 		endpoint = "enabled";
+		if(req.params.https){
+			if(req.params.https.toLowerCase()=="https"){
+				https=true;
+				console.log("=>ENDPOINT:HTTPS ENABLED");}}
+					else{
+					https=false;}
 		console.log("=>ENDPOINT:ENABLED:" + url + ":" + port + urlPath);
 		res.send({
 			"status": "endpoint=" + url + ":" + port + urlPath
@@ -251,6 +257,7 @@ exports.status = function (req, res) {
 		"url": url,
 		"port": port,
 		"path": urlPath,
+		"https":https,
 		"endpoint": endpoint
 	}
 	console.log("=>STATUS:", status);
@@ -263,10 +270,16 @@ exports.status = function (req, res) {
 // Function that calls the previously defined endpoint and POSTS
 // a JSON object of keys that are within the expiration interval.  
 function callEndpoint(stream) {
+	var proto;
 	var postBody = JSON.stringify(stream);
 	console.log("POST ENDPOINT=>BODY:" + postBody);
-	var http = require('http');
-	var request = new http.ClientRequest({
+	if(https){
+		var proto=require('https');
+		console.log("POST ENDPOINT=>HTTPS");}
+			else{
+				var proto=require('http');
+				console.log("POST ENDPOINT=>HTTP");}
+		var request = proto.request({
 		hostname: url,
 		port: port,
 		path: urlPath,
@@ -275,6 +288,7 @@ function callEndpoint(stream) {
 			"Content-Type": "application/json",
 			"Content-Length": postBody.length
 		}});
+
 	request.end(postBody);
 	return;
 }
