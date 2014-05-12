@@ -14,7 +14,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/create/:id/:sessioninfo/:ttl',rest.create);
 app.use('/setup/server/:host/:port/:bucket',rest.setup);
-app.use('/setup/endpoint/:hostname/:port/:urlSuffix',rest.endpoint);
+app.use('/setup/endpoint/:hostname/:port/:urlSuffix/:https',rest.endpoint);
+app.use('/setup/endpoint/:hostname/:port/:urlSuffix/',rest.endpoint);
 app.use('/setup/endpoint/:hostname',rest.endpoint);
 app.use('/setup/relative/:option',rest.relative);
 app.use('/setup/poll/:interval/:loop',rest.loop);
@@ -51,6 +52,10 @@ app.use(function(err, req, res, next) {
         message: err.message,
         error: {}
     });
+});
+process.on('uncaughtException', function (err) {
+    console.log( "UNCAUGHT EXCEPTION " );
+    console.log( "[Inside 'uncaughtException' event] " + err.stack || err.message );
 });
 
 module.exports = app;
